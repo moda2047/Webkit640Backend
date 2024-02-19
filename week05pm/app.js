@@ -2,89 +2,44 @@ const http = require("http");
 const express = require("express");
 const app = express();
 const cors = require("cors");
-// OS의 종류에 따라 경로 구분자 자동 변경
 const path = require("path");
 
-// set으로 속성 설정: port, viewEngine 등
 app.set("port", process.env.PORT || 3000);
-// || 는 삼항연산자의 약식 표현
-// process.env.PORT ? process.env.PORT : 3000
 
-// 뷰엔진 설정
 console.log(path.join(__dirname, "views"));
-app.set("views", path.join(__dirname, "views")); // 접두사
-app.set("view engine", "ejs"); // 접미사
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
-// static 미들웨어 설정 - html 파일 직접 접근
 app.use("/", express.static(path.join(__dirname, "public")));
+app.use(cors());
+// bodyParser 미들웨어 설정
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-// 사용자 정의 미들웨어 추가 - 인코딩 설정
-// 모든 요청에 영향을 준다.
-app.use((req, res, next) => {
-  console.log("사용자 정의 미들에서 실행");
-
-  //미들웨어 실행 후 다음 요청
-  next();
-});
-// 다른 미들웨어 추가
-app.use((req, res, next) => {
-  console.log("추가된 미들웨어 실행");
-  //req.adminName = "김길동";
-  //미들웨어 실행 후 다음 요청
-  next();
-});
-
-app.get("/welcome", (req, res) => {
-  console.log("GET - /welcome");
-  res.writeHead(200, { "Content-Type": "text/html; charset=UTF-8" });
-  res.write("<p>Welcome</p>");
-  res.write("<script>console.log('welcome home page')</script>");
-  res.write("<html>");
-  res.write("<body>");
-  res.write("<h1>Homepage</h1>");
-  res.write("<h3>어서오세요!</h3>");
-  res.write('<a href="http://www.naver.com">Naver로 이동</a>');
-  res.write("</html>");
-  res.write("</html>");
-  res.end();
+app.get("/test4", (req, res) => {
+  console.log("GET - /test4");
+  // let user = req.query.user;
+  // let age = req.query.age;
+  // let userObj = {user, age};
+  // console.log(userObj);
+  // res.send(userObj);
+  console.log(req.query);
+  res.send(req.query);
 });
 
-app.get("/test", (req, res) => {
-  res.writeHead(200, { "Content-Type": "text/html; charset=UTF-8" });
-  // 미들웨어에서 추가된 이름 사용.
-  res.write("관리자 이름: " + req.adminName);
-  res.end("<h1>테스트 page</h1>");
+app.post("/test5", (req, res) => {
+  console.log("GET - /test5");
+  console.log(req.body);
+  res.send(req.body);
 });
 
-app.get("/test2", (req, res) => {
-  res.redirect("https://www.naver.com/");
-});
-
-app.get("/test3", (req, res) => {
-  res.writeHead(200, { "Content-Type": "text/html; charset=UTF-8" });
-
-  let data = {
-    no: "1",
-    title: "밥 먹고 물마시고 잠자기",
-    done: true,
-  };
-
-  // end()는 오직 문자열만 처리한다.
-  // JSON.stringify()로 변환.
-  // 한글데이터 오류 - 해더 설정 필수.
-  res.end(JSON.stringify(data));
-
-  // 객체나 수식을 body에 문자열로 출력
-  // JS 개체 -> JSON 변환.
-  //res.send(data);
-});
-
-app.get("/home", (req, res) => {
-  console.log("GET - /home");
-  // ejs 템플릿 뷰엔진 렌더링 접두사 접미사를 생략한 파일명만
-  app.render("home", { data: "박길동" }, (err, html) => {
-    res.end(html);
-  });
+// path parameter
+// test6/KIM/Programmer
+app.get("/test6/:user/:job", (req, res) => {
+  console.log("GET - /test6/:user/:job");
+  console.log(req.params);
+  console.log(req.params.user);
+  res.send(req.params);
 });
 
 const server = http.createServer(app);
