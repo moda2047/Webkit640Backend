@@ -22,20 +22,21 @@ app.use("/", express.static(path.join(__dirname, "public")));
 // 모든 요청에 영향을 준다.
 app.use((req, res, next) => {
   console.log("사용자 정의 미들에서 실행");
-  res.writeHead(200, { "Content-Type": "text/html; charset=UTF-8" });
+
   //미들웨어 실행 후 다음 요청
   next();
 });
 // 다른 미들웨어 추가
 app.use((req, res, next) => {
   console.log("추가된 미들웨어 실행");
-  req.adminName = "김길동";
+  //req.adminName = "김길동";
   //미들웨어 실행 후 다음 요청
   next();
 });
 
 app.get("/welcome", (req, res) => {
   console.log("GET - /welcome");
+  res.writeHead(200, { "Content-Type": "text/html; charset=UTF-8" });
   res.write("<p>Welcome</p>");
   res.write("<script>console.log('welcome home page')</script>");
   res.write("<html>");
@@ -49,9 +50,33 @@ app.get("/welcome", (req, res) => {
 });
 
 app.get("/test", (req, res) => {
+  res.writeHead(200, { "Content-Type": "text/html; charset=UTF-8" });
   // 미들웨어에서 추가된 이름 사용.
   res.write("관리자 이름: " + req.adminName);
   res.end("<h1>테스트 page</h1>");
+});
+
+app.get("/test2", (req, res) => {
+  res.redirect("https://www.naver.com/");
+});
+
+app.get("/test3", (req, res) => {
+  res.writeHead(200, { "Content-Type": "text/html; charset=UTF-8" });
+
+  let data = {
+    no: "1",
+    title: "밥 먹고 물마시고 잠자기",
+    done: true,
+  };
+
+  // end()는 오직 문자열만 처리한다.
+  // JSON.stringify()로 변환.
+  // 한글데이터 오류 - 해더 설정 필수.
+  res.end(JSON.stringify(data));
+
+  // 객체나 수식을 body에 문자열로 출력
+  // JS 개체 -> JSON 변환.
+  //res.send(data);
 });
 
 app.get("/home", (req, res) => {
