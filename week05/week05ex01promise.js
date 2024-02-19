@@ -1,21 +1,13 @@
-function readJSON(filename) {
-  return new Promise(function (fulfill, reject) {
-    readFile("test.txt", "utf8").done(function (res) {
-      try {
-        fulfill(JSON.parse(res));
-      } catch (ex) {
-        reject(ex);
-      }
-    }, reject);
-  });
-}
-
-function okFn() {
+function fulfill() {
   console.log("성공");
 }
 
-function failFn() {
+function reject() {
   console.log("실패");
 }
 
-readJSON();
+function tast() {
+  console.log("할 일");
+}
+
+new Promise(task).then(fulfill, reject);
