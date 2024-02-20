@@ -5,7 +5,7 @@ const cors = require("cors");
 const path = require("path");
 const router = express.Router();
 const bodyParser = require("body-parser");
-var expressErrorHandler = require("express-error-handler");
+const expressErrorHandler = require("express-error-handler");
 
 //set으로 초기설정
 app.set("port", 3000);
@@ -13,7 +13,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 //미들웨어이다.
-app.use("/public", express.static("public"));
+app.use("/", express.static("public"));
 
 app.use(cors());
 //파라미터 전송을 위해 bodyParser 설정을 해야한다.
@@ -34,6 +34,12 @@ router.route("/home").get((req, res) => {
   });
 });
 //로그인 세션방식
+
+router.route("/member/login").post((req, res) => {
+  console.log("POST - /member/login");
+  console.dir(req.body);
+  res.send(req.body);
+});
 
 // router 미들웨어 등록 전에 router 설정 완료 해야한다.
 app.use(router);
