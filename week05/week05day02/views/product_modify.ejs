@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>수정 페이지</h1>
+    <form action="/shop/detail" method="POST">
+        <table border="1" width="100%">
+            <tr>
+                <th>id</th>
+                <td><input type="hidden" value="<%=car.id %>" name="id"/><%=car.id %></td>
+            </tr>
+            <tr>
+                <th>name</th>
+                <td><input type="hidden" value="<%=car.name %>" name="name"/></td>
+            </tr>
+            <tr>
+                <th>maker</th>
+                <td><input type="hidden" value="<%=car.maker %>" name="maker"/></td>
+            </tr>
+            <tr>
+                <th>price</th>
+                <td><input type="hidden" value="<%=car.price %>" name="price"/></td>
+            </tr>
+            <tr>
+                <th>year</th>
+                <td><input type="hidden" value="<%=car.year %>" name="year"/></td>
+            </tr>
+        </table>
+    </form>
+    <a href="/shop/list">목록</a> |
+    <a href="/member/logout">로그아웃</a> |
+    <a href="/member/modify/<%=car.id %>">수정</a> |
+    <a href="/member/delete/<%=car.id %>">삭제</a> |
+    <a href="/">홈</a>
+</body>
+</html>
