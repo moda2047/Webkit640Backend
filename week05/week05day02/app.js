@@ -6,6 +6,17 @@ const path = require("path");
 const router = express.Router();
 const bodyParser = require("body-parser");
 const expressErrorHandler = require("express-error-handler");
+const cookieParser = require("cookie-parser");
+const expressSession = require("express-session");
+
+app.use(cookieParser());
+app.use(
+  expressSession({
+    secret: "my key",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
 //set으로 초기설정
 app.set("port", 3000);
@@ -61,6 +72,13 @@ function findOne(data, callback) {
   callback(null, null);
 }
 
+router.route("/member/logout").get((req, res) => {
+  if (req.session.user) {
+    req.session.user = undefined;
+  }
+  res.redirect("/member/login.html");
+});
+
 router.route("/member/login").post((req, res) => {
   console.log("POST - /member/login");
   res.writeHead(200, { "Content-Type": "text/html; charset=UTF-8" });
@@ -79,12 +97,38 @@ router.route("/member/login").post((req, res) => {
       res.end("<h2>로그인 결과 없습니다!</h2>");
       return;
     }
-    console.log("결과: ", result);
-    res.write("<h2>로그인 성공</h2>");
-    // Object와 JSON은 다르다. JSON은 문자열, Object 객체
-    res.write(JSON.stringify(result));
-    res.end();
+    if (req.session.user) {
+      console.log("이미 로그인 되어 상품 페이지로 이동 함.");
+      res.redirect("/public/product.html");
+    } else {
+      // 세션 저장
+      req.session.user = result;
+
+      console.log("결과: ", result);
+      res.write("<h2>로그인 성공</h2>");
+      res.write('<a href="/shop/list">상품목록으로 이동</a>');
+      res.write('<a href="/member/logout">로그아웃</a>');
+
+      // Object와 JSON은 다르다. JSON은 문자열, Object 객체
+      //res.write(JSON.stringify(result));
+      res.end();
+      return;
+    }
+  });
+});
+
+router.route("/shop/list").get((req, res) => {
+  if (req.session.user === undefined) {
+    console.log("로그인정보가 없다");
+    res.redirect("/member/login.html");
     return;
+  }
+  req.app.render("product", {}, (err, html) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    res.end(html);
   });
 });
 
