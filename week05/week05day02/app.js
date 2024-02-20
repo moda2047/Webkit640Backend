@@ -34,11 +34,58 @@ router.route("/home").get((req, res) => {
   });
 });
 //로그인 세션방식
+const users = [
+  { id: "user01", password: "user123", phone: "010-1111-1111", name: "홍길동" },
+  {
+    id: "user02",
+    password: "user1234",
+    phone: "010-1111-2222",
+    name: "김길동",
+  },
+  { id: "admin", password: "admin123", phone: "010-1111-3333", name: "관리자" },
+];
+
+function findOne(data, callback) {
+  if (data.id == null || data.password == null) {
+    callback("Error - id 또는 pass가 없습니다!", null);
+    return;
+  }
+
+  for (let i = 0; i < users.length; i++) {
+    console.log(data.id == users[i].id);
+    if (data.id === users[i].id && data.password === users[i].password) {
+      callback(null, users[i]);
+      return;
+    }
+  }
+  callback(null, null);
+}
 
 router.route("/member/login").post((req, res) => {
   console.log("POST - /member/login");
-  console.dir(req.body);
-  res.send(req.body);
+  res.writeHead(200, { "Content-Type": "text/html; charset=UTF-8" });
+  const data = {
+    id: req.body.id,
+    password: req.body.password,
+  };
+  findOne(data, (err, result) => {
+    // JS에서는 undefined, null, 0이 모두 false이다.
+    if (err) {
+      console.log(err);
+      res.end("<h2>로그인 결과 없습니다!</h2>");
+      return;
+    }
+    if (result == null) {
+      res.end("<h2>로그인 결과 없습니다!</h2>");
+      return;
+    }
+    console.log("결과: ", result);
+    res.write("<h2>로그인 성공</h2>");
+    // Object와 JSON은 다르다. JSON은 문자열, Object 객체
+    res.write(JSON.stringify(result));
+    res.end();
+    return;
+  });
 });
 
 // router 미들웨어 등록 전에 router 설정 완료 해야한다.
