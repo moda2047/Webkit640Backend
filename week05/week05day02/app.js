@@ -185,7 +185,63 @@ router.route("/shop/detail/:id").get((req, res) => {
   });
 });
 
-// 제품 상세보기 페이지
+// 제품 삭제
+router.route("/shop/delete/:id").get((req, res) => {
+  // session에 사용자 정보가 있다면 보여준다.
+  // 그것이 없다면 다시 로그인 페이지로 redirect
+  if (req.session.user === undefined) {
+    console.log("로그인 정보가 없다!");
+    res.redirect("/member/login.html");
+    return;
+  }
+
+  let car = {};
+  let index = carList.findIndex((car) => {
+    console.log(car);
+    return car.id === req.params.id;
+  });
+  if (index != -1) {
+    // 적용
+    carList.splice(index, 1);
+  }
+
+  // 목록으로 새로고침
+  res.redirect("/shop/list");
+});
+
+// 제품 수정 완료
+router.route("/shop/modify").post((req, res) => {
+  // session에 사용자 정보가 있다면 보여준다.
+  // 그것이 없다면 다시 로그인 페이지로 redirect
+  if (req.session.user === undefined) {
+    console.log("로그인 정보가 없다!");
+    res.redirect("/member/login.html");
+    return;
+  }
+
+  // 수정할 대상 찾기
+  let car = {};
+  let index = carList.findIndex((car) => {
+    console.log(car);
+    return car.id === req.body.id;
+  });
+  if (index != -1) {
+    car = carList[index];
+    // 적용
+    carList[index] = {
+      id: req.body.id,
+      name: req.body.name,
+      maker: req.body.maker,
+      price: req.body.price,
+      year: req.body.price,
+    };
+  }
+
+  // 목록으로 새로고침
+  res.redirect("/shop/list");
+});
+
+// 제품 수정 페이지로 forward
 router.route("/shop/modify/:id").get((req, res) => {
   // session에 사용자 정보가 있다면 보여준다.
   // 그것이 없다면 다시 로그인 페이지로 redirect
