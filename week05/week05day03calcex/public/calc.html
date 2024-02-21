@@ -7,5 +7,67 @@
   </head>
   <body>
     <h1>사칙연산 계산기</h1>
+    <form>
+      <table>
+        <tr>
+          <th>항1</th>
+          <td><input type="text" name="a" value="20" /></td>
+        </tr>
+        <tr>
+          <th>항1</th>
+          <td><input type="text" name="b" value="3" /></td>
+        </tr>
+        <tr>
+          <th>연산자</th>
+          <td>
+            <select name="oper">
+              <option value="GET">+</option>
+              <option value="DELETE">-</option>
+              <option value="POST">*</option>
+              <option value="PUT">/</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th></th>
+          <td><input type="submit" value="확인" /></td>
+        </tr>
+      </table>
+    </form>
+    <hr />
+    <div id="resultBox">결과 나오는 곳:</div>
+
+    <script>
+      var form = document.forms[0];
+      form.onsubmit = function () {
+        event.preventDefault();
+
+        console.log(form.a.value, form.b.value, form.oper.value);
+        const server = "http://localhost:5000";
+        const calUrl = `/calc/${form.a.value}/${form.b.value}`;
+        const method = form.oper.value;
+        const transOper = {
+          GET: "+",
+          DELETE: "-",
+          POST: "*",
+          PUT: "/",
+        };
+
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          const resultData = JSON.parse(xhr.responseText);
+          const resultHTML = `결과 나오는 곳:<br/>
+                    <table border="1">
+                        <tr><th>식</th><td>${form.a.value} ${transOper[method]} ${form.b.value}</td></tr>
+                        <tr><th>결과</th><td>${resultData.result}</td></tr>
+                        <tr><th>날짜</th><td>${resultData.date}</td></tr>
+                        <tr><th>method</th><td>${resultData.method}</td></tr>
+                    </table>`;
+          document.getElementById("resultBox").innerHTML = resultHTML;
+        };
+        xhr.open(method, server + calUrl, true);
+        xhr.send();
+      };
+    </script>
   </body>
 </html>

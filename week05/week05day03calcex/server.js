@@ -5,6 +5,8 @@ const cors = require("cors");
 const router = express.Router();
 
 app.set("port", 5000);
+// 다른 서버 or, 다른 url 또는 port에서 접속 가능.
+app.use(cors());
 
 // 사칙연산이 기능
 // REST api로 구현
