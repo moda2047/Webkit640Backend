@@ -141,10 +141,42 @@ router.route("/member/login").post((req, res) => {
 });
 
 let carList = [
-  { id: "p001", name: "SONATA", maker: "HYUNDAI", price: 2400, year: 2018 },
-  { id: "p022", name: "SORENTO", maker: "KIA", price: 3400, year: 2021 },
-  { id: "p033", name: "S80", maker: "VOLVO", price: 4500, year: 2016 },
-  { id: "p104", name: "S540", maker: "BENZ", price: 7200, year: 2020 },
+  {
+    id: "p001",
+    name: "SONATA",
+    maker: "HYUNDAI",
+    price: 2400,
+    year: 2018,
+    filename: "",
+    originalname: "",
+  },
+  {
+    id: "p022",
+    name: "SORENTO",
+    maker: "KIA",
+    price: 3400,
+    year: 2021,
+    filename: "",
+    originalname: "",
+  },
+  {
+    id: "p033",
+    name: "S80",
+    maker: "VOLVO",
+    price: 4500,
+    year: 2016,
+    filename: "",
+    originalname: "",
+  },
+  {
+    id: "p104",
+    name: "S540",
+    maker: "BENZ",
+    price: 7200,
+    year: 2020,
+    filename: "",
+    originalname: "",
+  },
 ];
 
 // 아이디 중복 검사 기능
@@ -153,8 +185,8 @@ router.route("/shop/idcheck/:userid").get((req, res) => {
   let check = false;
   // 중복된 id가 있다면 true로 변경
   const userid = req.params.userid;
-
   carList.forEach((car) => {
+    console.log(userid === car.id);
     if (car.id === userid) {
       check = true;
       return;
@@ -212,7 +244,7 @@ router.route("/shop").post(upload.array("photo", 1), (req, res) => {
   }
 
   try {
-    var files = req.files;
+    var files = req.files[0];
     console.log(files);
     console.log(req.body);
     carList.push({

@@ -28,6 +28,14 @@
             <th>year</th>
             <td><%=car.year %></td>
         </tr>
+        <tr>
+            <th>이미지 파일 명</th>
+            <td><%=car.originalname %></td>
+        </tr>
+        <tr>
+            <th>이미지</th>
+            <td><img width="100" src="/uploads/<%=car.filename %>" /></td>
+        </tr>
     </table>
 
     <a href="/shop">목록</a> |

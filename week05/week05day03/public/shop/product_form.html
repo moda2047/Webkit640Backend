@@ -11,7 +11,8 @@
         const xhr = new XMLHttpRequest();
         xhr.onload = function () {
           console.log(xhr.responseText);
-          return JSON.parse(xhr.responseText);
+          check = JSON.parse(xhr.responseText);
+          return check;
         };
         xhr.open("GET", "/shop/idcheck/" + userid, true);
         xhr.send();
@@ -30,7 +31,7 @@
           document.getElementById("userid").focus();
           return;
         }
-        check = idCheckAjax(userid); // 중복 ID가 없다면 false
+        idCheckAjax(userid); // 중복 ID가 없다면 false
         console.log("check:", check);
       }
 
