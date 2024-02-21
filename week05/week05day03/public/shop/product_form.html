@@ -1,47 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>자동차 등록</title>
-</head>
-<body>
+    <script>
+      let check = true;
 
+      function idCheckAjax(userid) {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          console.log(xhr.responseText);
+          return JSON.parse(xhr.responseText);
+        };
+        xhr.open("GET", "/shop/idcheck/" + userid, true);
+        xhr.send();
+      }
+
+      function idCheck() {
+        event.preventDefault();
+
+        alert("check");
+        // 체크가 통과하면 true 변경.
+        // 실습 과제: Ajax를 이용해서 서버의 목록에
+        // 같은 아이디가 있는지 검사하기
+        const userid = document.getElementById("userid").value;
+        if (userid == "") {
+          alert("userid를 입력하고 ID중복검사 하세요.");
+          document.getElementById("userid").focus();
+          return;
+        }
+        check = idCheckAjax(userid); // 중복 ID가 없다면 false
+        console.log("check:", check);
+      }
+
+      window.onload = function () {
+        const inputForm = document.getElementById("inputForm");
+        inputForm.onsubmit = function () {
+          event.preventDefault();
+          if (check) {
+            alert("id 중복 검사 Pass 하세요!");
+            document.getElementById("userid").focus();
+            return;
+          }
+
+          inputForm.method = "POST";
+          inputForm.enctype = "multipart/form-data";
+          inputForm.submit();
+        };
+      };
+    </script>
+  </head>
+  <body>
     <h1>중고차 등록</h1>
-    <form action="/shop" method="POST">
-        <table border="1" width="100%">
-            <tr>
-                <th>id</th>
-                <td>
-                    <input type="text" value="p104" name="id"/>
-                    <button >ID 중복 검사</button>
-                </td>
-            </tr>
-            <tr>
-                <th>name</th>
-                <td><input type="text" value="GRANDEUR" name="name"/></td>
-            </tr>
-            <tr>
-                <th>maker</th>
-                <td><input type="text" value="HYUNDAI" name="maker"/></td>
-            </tr>
-            <tr>
-                <th>price</th>
-                <td><input type="text" value="3500" name="price"/></td>
-            </tr>
-            <tr>
-                <th>year</th>
-                <td><input type="text" value="2022" name="year"/></td>
-            </tr>
-            <tr>
-                <td colspan="5">
-                    <input type="submit" value="수정">
-                </td>
-            </tr>
-        </table>
+    <form
+      id="inputForm"
+      action="/shop"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <table border="1" width="100%">
+        <tr>
+          <th>id</th>
+          <td>
+            <input type="text" value="p105" name="id" id="userid" size="5" />
+            <button onclick="idCheck()">ID중복검사</button>
+          </td>
+        </tr>
+        <tr>
+          <th>name</th>
+          <td><input type="text" value="GRANDEUR" name="name" /></td>
+        </tr>
+        <tr>
+          <th>maker</th>
+          <td><input type="text" value="HYUNDAI" name="maker" /></td>
+        </tr>
+        <tr>
+          <th>price</th>
+          <td><input type="text" value="3500" name="price" /></td>
+        </tr>
+        <tr>
+          <th>year</th>
+          <td><input type="text" value="2022" name="year" /></td>
+        </tr>
+        <tr>
+          <th>사진</th>
+          <td><input type="file" name="photo" /></td>
+        </tr>
+        <tr>
+          <td colspan="5">
+            <input type="submit" value="저장" />
+          </td>
+        </tr>
+      </table>
     </form>
-    <a href="/shop">목록</a> |
-    <a href="/member/logout">로그아웃</a> |
+    <a href="/shop">목록</a> | <a href="/member/logout">로그아웃</a> |
     <a href="/home">홈</a>
-</body>
+  </body>
 </html>
