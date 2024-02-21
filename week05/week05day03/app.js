@@ -214,7 +214,19 @@ router.route("/shop").post(upload.array("photo", 1), (req, res) => {
   try {
     var files = req.files;
     console.log(files);
-  } catch {}
+    console.log(req.body);
+    carList.push({
+      id: req.body.id,
+      name: req.body.name,
+      maker: req.body.maker,
+      price: req.body.price,
+      year: req.body.year,
+      filename: files.filename,
+      originalname: files.originalname,
+    });
+  } catch {
+    console.log("파일 전송 오류!");
+  }
 
   res.redirect("/shop");
 });
