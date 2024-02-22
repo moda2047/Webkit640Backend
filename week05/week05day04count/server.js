@@ -5,25 +5,33 @@ var app = express();
 
 app.set('port', 3000);
 app.use(cors());
+app.use("/", express.static("public"));
 
-var cnt = 0;
-var responseData = {"dateStr":"", "count":cnt};
-app.get("/count", function(req, res) {
-    cnt++;
+var messages = [];
+
+app.get("/send", function(req, res) {
     var date = new Date();
-    responseData = {
+    var message = {
         "dateStr":date.getFullYear()+"-"+
-            (date.getMonth()+1)+"-"+
-            (date.getDate())+" "+
-            (date.getHours())+":"+
-            (date.getMinutes()),
-        "count":cnt
+            (date.getMonth()+1)+"-"+(date.getDate())+" "+
+            (date.getHours())+":"+(date.getMinutes())+":"+
+            (date.getSeconds()),
+        "sender": req.query.sender,
+        "message": req.query.message
     }
-    res.end(JSON.stringify(responseData ) );
+    messages.push(message);
+    console.log(messages);
+    res.end();
 });
 
-app.get("/receive/:localCount", (req, res) => {
-    if(cnt > Number(req.params.localCount)) {
+app.get("/receive", (req, res) => {
+    var responseData = {total:0, messages:[]};
+    var index = messages.length;
+    if(index > Number(req.query.size)) {
+        responseData = {
+            total: messages.length,
+            messages: messages.slice(Number(req.query.size))
+        };
         res.end(JSON.stringify(responseData ) );
     } else {
         res.end("");

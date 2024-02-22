@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>인스턴트 메신저</h1>
+    <form>
+        <div id="box" style="width:300px;height:300px;border:1px solid red;overflow:scroll;"></div>
+        사용자: <input type="text" name="sender" value="길동이"><br>
+        메세지: <input type="text" name="message" value="안녕">
+        <input type="submit" value="전송">
+    </form>
+    
+    <script>
+        const box = document.getElementById('box');
+        const form = document.forms[0];
+        form.onsubmit = function(event) {
+            event.preventDefault();
+            const sender = form.sender.value;
+            const message = form.message.value;
+            const url = "http://localhost:3000/send";
+            const query = `?sender=${sender}&message=${message}`;
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function() { }
+            xhr.open("GET", url+query, true);
+            xhr.send();
+        }
+
+        let size = 0;
+        setInterval(function(event) {
+            const url = "http://localhost:3000/receive";
+            const query = `?size=${size}`;
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                if(xhr.responseText !== "") {
+                    var data = this.responseText;
+                    var obj = JSON.parse(xhr.responseText);
+                    var messages = obj.messages;
+                    var rows = box.innerHTML;
+                    for(var i=0; i<messages.length; i++) {
+                        console.log(messages[i]);
+                        rows += (messages[i].sender + ": "+ 
+                            messages[i].message + "<br>");
+                    }
+                    box.innerHTML = rows;
+                    size = Number(obj.total);
+                }
+            }
+            xhr.open("GET", url+query, true);
+            xhr.send();
+        }, 1000);
+    </script>
+</body>
+</html>
