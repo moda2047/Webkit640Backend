@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>실시간 접속 카운트</h1>
+    <div id="box">
+        count: 1<br/>
+        date: 2024-2-22 9:32
+    </div>
+    <script>
+        var url = "http://localhost:3000/count";
+        var xhr = new XMLHttpRequest();
+        var box = document.getElementById('box');
+
+        xhr.onreadystatechange = function() {
+            if(xhr.status==200 && xhr.readyState==4){
+                const resData = JSON.parse(xhr.responseText);
+                box.innerHTML =  `count: ${resData.count}<br/>
+                    date: ${resData.dateStr}`;
+            }
+        };
+
+        xhr.open("GET",url,true);
+        xhr.send();
+    </script>
+</body>
+</html>

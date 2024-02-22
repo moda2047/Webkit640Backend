@@ -7,11 +7,10 @@ app.set('port', 3000);
 app.use(cors());
 
 var cnt = 0;
-var responseData = {"dateStr":"", "count":cnt};
-app.get("/count", function(req, res) {
+app.get("/count", function(req, resp) {
     cnt++;
     var date = new Date();
-    responseData = {
+    var responseData = {
         "dateStr":date.getFullYear()+"-"+
             (date.getMonth()+1)+"-"+
             (date.getDate())+" "+
@@ -19,15 +18,7 @@ app.get("/count", function(req, res) {
             (date.getMinutes()),
         "count":cnt
     }
-    res.end(JSON.stringify(responseData ) );
-});
-
-app.get("/receive/:localCount", (req, res) => {
-    if(cnt > Number(req.params.localCount)) {
-        res.end(JSON.stringify(responseData ) );
-    } else {
-        res.end("");
-    }
+    resp.end(JSON.stringify(responseData ) );
 });
 
 http.createServer(app).listen(app.get('port'), function() {
