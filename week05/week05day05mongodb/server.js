@@ -3,7 +3,6 @@ const { MongoClient } = require("mongodb");
 
 const dbUrl = "mongodb://localhost";
 let vehicleDB = null;
-let usersDB = null;
 function connectDb() {
   MongoClient.connect(
     dbUrl,
@@ -12,7 +11,7 @@ function connectDb() {
       if (err) throw err;
 
       vehicleDB = client.db("vehicle");
-      usersDB = client.db("users");
+      // vehicle DB 내부에 car와 users 컬렉션이 존재 한다.
       console.log("DB 접속 성공!");
     }
   );
@@ -27,16 +26,25 @@ app.set("views", __dirname + "/views");
 // 정적 폴더를 public으로 지정
 app.use(express.static("public"));
 
-app.get("/car", (req, res) => {
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.post("/process/adduser", (req, res) => {
+  console.log("POST - /process/adduser");
+  // bodyParser 미들웨어 등록
+  res.send(req.body);
+});
+
+app.get("/process/users", (req, res) => {
   console.log("GET - /car");
   res.writeHead(200, { "Content-Type": "text/html; charset=UTF-8" });
-  if (usersDB) {
-    usersDB
-      .collection("car")
+  if (vehicleDB) {
+    vehicleDB
+      .collection("users")
       .find()
-      .toArray(function (err, carList) {
+      .toArray(function (err, usersList) {
         if (err) throw err;
-        req.app.render("car_list", { carList }, (err2, html) => {
+        req.app.render("users_list", { usersList }, (err2, html) => {
           if (err2) throw err;
           res.end(html);
         });

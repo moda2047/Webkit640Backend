@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>회원 목록</h1>
+    <table border="1" width="100%">
+      <tr>
+        <th>NO</th>
+        <th>ID</th>
+        <th>NAME</th>
+        <th>PASSWORD</th>
+      </tr>
+      <% usersList.forEach((user, i) => { %>
+      <tr>
+        <td><%=i %></td>
+        <td><%=user.id %></td>
+        <td><%=user.name %></td>
+        <td><%=user.password %></td>
+      </tr>
+      <% }); %>
+    </table>
+  </body>
+</html>
