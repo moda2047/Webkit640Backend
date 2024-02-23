@@ -15,15 +15,15 @@
         <th>COMPANY</th>
         <th>YEAR</th>
       </tr>
-      <% carList.forEach((car, i)=>{ %>
+      <% carList.forEach((car, i) => { %>
       <tr>
         <td><%=i %></td>
-        <td><%=car._id%></td>
-        <td><%=car.name%></td>
-        <td><%=car.price%></td>
-        <td><%=car.year%></td>
+        <td><%=car.name %></td>
+        <td><%=car.price %></td>
+        <td><%=car.company %></td>
+        <td><%=car.year %></td>
       </tr>
-      <% }) %>
+      <% }); %>
     </table>
   </body>
 </html>
